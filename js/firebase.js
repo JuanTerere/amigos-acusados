@@ -1,14 +1,15 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-app.js";
 import { getFirestore, collection, addDoc, getDoc, doc, updateDoc, increment } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-firestore.js";
 
-// Reemplazar con las credenciales reales de Firebase
+// Tu configuración de Firebase
 const firebaseConfig = {
-    apiKey: "TU_API_KEY",
-    authDomain: "tu-proyecto.firebaseapp.com",
-    projectId: "tu-proyecto",
-    storageBucket: "tu-proyecto.appspot.com",
-    messagingSenderId: "TU_ID",
-    appId: "TU_APP_ID"
+  apiKey: "AIzaSyDRIt695uY834ctoKJMfRfl1Mbr_XzsDlo",
+  authDomain: "amigos-acusados.firebaseapp.com",
+  databaseURL: "https://amigos-acusados-default-rtdb.firebaseio.com",
+  projectId: "amigos-acusados",
+  storageBucket: "amigos-acusados.firebasestorage.app",
+  messagingSenderId: "423077155035",
+  appId: "1:423077155035:web:a0968857ec686a3326fcfe"
 };
 
 const app = initializeApp(firebaseConfig);
