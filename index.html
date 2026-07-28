@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Amigos Acusados | Unidad de Investigación de Amistad</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <!-- html2canvas para generar la imagen descargable -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+</head>
+<body>
+    <div class="app-container">
+        
+        <!-- PANTALLA 1: INICIO -->
+        <section id="screen-home" class="screen active">
+            <img src="assets/logo.png" alt="Amigos Acusados Logo" class="logo">
+            <h1>AMIGOS ACUSADOS</h1>
+            <p class="subtitle">"La Unidad de Investigación de Amistad recibe denuncias todos los días..."</p>
+            <button id="btn-start" class="btn-primary">Presentar cargos</button>
+            
+            <div class="stats-container">
+                <div class="stat-box">
+                    <span class="stat-icon">👥</span>
+                    <span id="stat-cases" class="stat-number">0</span>
+                    <span class="stat-label">Personas investigadas</span>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-icon">⚖</span>
+                    <span id="stat-resolutions" class="stat-number">0</span>
+                    <span class="stat-label">Resoluciones emitidas</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- PANTALLA 2: PRESENTAR CARGOS -->
+        <section id="screen-form" class="screen hidden">
+            <img src="assets/logo.png" alt="Logo" class="logo-small">
+            <h2>Nuevo Expediente</h2>
+            <form id="charge-form">
+                <div class="form-group">
+                    <label for="denunciante">Tu nombre (Denunciante)</label>
+                    <input type="text" id="denunciante" required placeholder="Ej. Juan">
+                </div>
+                <div class="form-group">
+                    <label for="acusado">Nombre de tu amigo (Acusado)</label>
+                    <input type="text" id="acusado" required placeholder="Ej. Carlos">
+                </div>
+                <div class="form-group">
+                    <label for="cargo">Cargo principal</label>
+                    <select id="cargo" required>
+                        <option value="" disabled selected>Selecciona una infracción...</option>
+                        <!-- Se llena dinámicamente con JS -->
+                    </select>
+                </div>
+                <button type="submit" class="btn-primary" id="btn-submit-charge">Presentar cargos</button>
+            </form>
+        </section>
+
+        <!-- PANTALLA 3: CASO REGISTRADO (COMPARTIR) -->
+        <section id="screen-share" class="screen hidden">
+            <img src="assets/logo.png" alt="Logo" class="logo-small">
+            <div class="dossier-card">
+                <h3>CASO REGISTRADO</h3>
+                <p><strong>Expediente N°:</strong> <span id="share-case-id"></span></p>
+                <p><strong>Denunciante:</strong> <span id="share-denunciante"></span></p>
+                <p><strong>Acusado:</strong> <span id="share-acusado"></span></p>
+                <p class="status pending">ESTADO: Pendiente de declaración</p>
+            </div>
+            <button id="btn-whatsapp" class="btn-whatsapp">Enviar citación por WhatsApp</button>
+        </section>
+
+        <!-- PANTALLA 4: PÁGINA DEL ACUSADO -->
+        <section id="screen-accused" class="screen hidden">
+            <img src="assets/logo.png" alt="Logo" class="logo-small">
+            <h2>CITACIÓN OFICIAL</h2>
+            <p>Atención <strong id="accused-name"></strong>, tu amigo <strong id="accused-denunciante"></strong> ha presentado cargos formales en tu contra.</p>
+            <div class="action-buttons">
+                <button id="btn-view-charges" class="btn-secondary">📄 Ver Expediente</button>
+                <button id="btn-plead-guilty" class="btn-guilty">😅 Me declaro Culpable</button>
+                <button id="btn-plead-innocent" class="btn-innocent">😇 Me declaro Inocente</button>
+            </div>
+        </section>
+
+        <!-- PANTALLA 5: VER CARGOS (EXPEDIENTE) -->
+        <section id="screen-dossier" class="screen hidden">
+            <div class="document-wrapper">
+                <img src="assets/logo.png" alt="Logo" class="logo-small">
+                <h2>EXPEDIENTE DE INVESTIGACIÓN</h2>
+                <div class="doc-details">
+                    <p><strong>Expediente N°:</strong> <span id="dossier-id"></span></p>
+                    <p><strong>Acusado:</strong> <span id="dossier-name"></span></p>
+                    <p><strong>Fecha:</strong> <span id="dossier-date"></span></p>
+                </div>
+                <hr>
+                <h3 class="charge-title">CARGO IMPUTADO</h3>
+                <p id="dossier-charge" class="charge-text"></p>
+                
+                <h3 class="evidence-title">PRUEBAS RECOPILADAS</h3>
+                <div id="dossier-evidence" class="evidence-box"></div>
+                
+                <button id="btn-back-accused" class="btn-secondary">Volver a declarar</button>
+            </div>
+        </section>
+
+        <!-- PANTALLA 6 y 7: RESOLUCIÓN (DESCARGABLE) -->
+        <section id="screen-resolution" class="screen hidden">
+            <div id="resolution-capture" class="document-wrapper capture-area">
+                <img src="assets/logo.png" alt="Logo" class="logo-small">
+                <h2>RESOLUCIÓN OFICIAL</h2>
+                <div class="doc-details">
+                    <p><strong>Expediente N°:</strong> <span id="res-id"></span></p>
+                    <p><strong>Acusado:</strong> <span id="res-name"></span></p>
+                </div>
+                <hr>
+                <img id="res-stamp" src="" alt="Sello" class="stamp">
+                <h3 id="res-title"></h3>
+                <p id="res-text" class="resolution-text"></p>
+                
+                <div class="doc-footer">
+                    <p>Emitido por la Unidad de Investigación de Amistad</p>
+                    <p>amigosacusados.com</p>
+                </div>
+            </div>
+            <button id="btn-download" class="btn-primary mt-4">Descargar y Compartir</button>
+        </section>
+
+    </div>
+    
+    <!-- Scripts usando ES Modules -->
+    <script type="module" src="js/app.js"></script>
+</body>
+</html>
