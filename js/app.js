@@ -4,30 +4,27 @@ import { registrarVisita, getStats, createCase, getCase, resolveCase } from './f
 let currentCaseId = null;
 let currentCaseData = null;
 
-// CORRECCIÓN: Función reparada para cambiar de pantallas sin que queden en blanco
+// Cambiador de pantallas seguro (evita pantallas en blanco)
 const switchScreen = (id, bgClass = '') => {
-    // 1. Ocultar todas las pantallas asegurándonos de limpiar las clases
     document.querySelectorAll('.screen').forEach(s => {
         s.classList.remove('active');
         s.classList.add('hidden');
     });
     
-    // 2. Mostrar únicamente la pantalla destino
     const screen = document.getElementById(id);
     screen.classList.remove('hidden');
     screen.classList.add('active');
     
-    // Cambiar fondo de la pantalla de resolución si aplica
     if(bgClass) {
         document.getElementById('screen-resolution').className = `screen active ${bgClass}`;
     }
 };
 
 document.addEventListener('DOMContentLoaded', async () => {
-    // Registramos la visita en Firebase (se crea el documento si no existe)
+    // 1. Registrar visita (crea documento si no existe)
     await registrarVisita();
     
-    // Llenar selector de acusaciones
+    // 2. Llenar selector
     const select = document.getElementById('acusacion');
     for (const [id, data] of Object.entries(acusaciones)) {
         const option = document.createElement('option');
@@ -36,7 +33,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         select.appendChild(option);
     }
 
-    // Router: Comprobar si alguien entra por link de WhatsApp
+    // 3. Revisar URL por si es un acusado entrando
     const urlParams = new URLSearchParams(window.location.search);
     const casoId = urlParams.get('id');
 
@@ -53,7 +50,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             window.location.href = '/';
         }
     } else {
-        // Cargar y mostrar estadísticas globales
+        // Cargar estadísticas en inicio
         const stats = await getStats();
         document.getElementById('stat-visitantes').textContent = stats.visitantes || 0;
         document.getElementById('stat-cargos').textContent = stats.cargos_presentados || 0;
@@ -61,7 +58,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 });
 
-// EVENTO: Botón de inicio para presentar cargos
+// EVENTO: Ir al formulario
 document.getElementById('btn-start').addEventListener('click', () => switchScreen('screen-form'));
 
 // EVENTO: Enviar formulario de cargos
@@ -82,7 +79,6 @@ document.getElementById('charge-form').addEventListener('submit', async (e) => {
         document.getElementById('share-denunciante').textContent = denunciante;
         document.getElementById('share-acusado').textContent = acusado;
         
-        // Preparar WhatsApp
         const link = `https://juanterere.github.io/amigos-acusados/?id=${caseId}`;
         const msg = `¡Ups!\n${acusado}...\nTu amigo ${denunciante} acaba de presentar cargos contra vos en *Amigos Acusados* 😅\n\n¿Sos culpable o vas a defender tu honor?\nEntrá y descubrí de qué te acusan.\n${link}`;
         
@@ -98,7 +94,7 @@ document.getElementById('charge-form').addEventListener('submit', async (e) => {
     }
 });
 
-// EVENTO: Acusado - Ver expediente
+// EVENTOS: Leer expediente
 document.getElementById('btn-view-dossier').addEventListener('click', () => {
     const ac = acusaciones[currentCaseData.acusacion];
     document.getElementById('dossier-acusado').textContent = currentCaseData.acusado;
@@ -110,10 +106,9 @@ document.getElementById('btn-view-dossier').addEventListener('click', () => {
     document.getElementById('dossier-t2').textContent = `"${ac.testimonio_2}"`;
     switchScreen('screen-dossier');
 });
-
 document.getElementById('btn-back-accused').addEventListener('click', () => switchScreen('screen-accused'));
 
-// EVENTO: Acusado - Resoluciones
+// FUNCION: Emitir Sentencia
 const setResolution = async (tipo) => {
     const ac = acusaciones[currentCaseData.acusacion];
     document.getElementById('res-id').textContent = currentCaseId.toUpperCase();
@@ -133,8 +128,37 @@ const setResolution = async (tipo) => {
     await resolveCase(currentCaseId, tipo);
 };
 
+// EVENTO: Acusado Culpable (Directo)
 document.getElementById('btn-plead-guilty').addEventListener('click', () => setResolution('culpable'));
-document.getElementById('btn-plead-innocent').addEventListener('click', () => setResolution('inocente'));
+
+// EVENTO: Acusado Inocente (Abre pantalla de delatar)
+document.getElementById('btn-plead-innocent').addEventListener('click', () => {
+    switchScreen('screen-blame');
+});
+
+// EVENTO: Enviar culpa al amigo por WA y emitir sentencia
+document.getElementById('btn-send-blame').addEventListener('click', async () => {
+    const blameName = document.getElementById('blame-name').value.trim();
+    
+    if (!blameName) {
+        alert("¡Tenés que escribir el nombre de tu amigo para salvarte!");
+        return;
+    }
+
+    const ac = acusaciones[currentCaseData.acusacion];
+    const msg = `¡Ey ${blameName}!\nMe acaban de acusar de "${ac.titulo}", pero me declaré inocente ante el juez alegando que actué bajo TU MALA INFLUENCIA. 😅\n\nQuedás formalmente involucrado en el caso.\nEntrá a defenderte o crear tu propia acusación: https://juanterere.github.io/amigos-acusados/`;
+    
+    // Abre WhatsApp con el texto
+    window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(msg)}`, '_blank');
+    
+    // Recién ahora se resuelve como inocente en el sistema
+    await setResolution('inocente');
+});
+
+// EVENTO: Volver al inicio para nueva acusación
+document.getElementById('btn-new-accusation').addEventListener('click', () => {
+    window.location.href = window.location.pathname; // Limpia la URL y recarga
+});
 
 // EVENTO: Descargar PNG
 document.getElementById('btn-download').addEventListener('click', () => {
