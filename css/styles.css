@@ -5,16 +5,16 @@
 
 body {
     margin: 0;
-    padding: 20px;
-    background-color: #f4ebd8; /* Tu fondo beige */
+    padding: 30px 20px; /* Padding superior para que no pegue exactamente en el techo */
+    background-color: #f4ebd8; 
     color: #1a1a1a;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    justify-content: flex-start; /* Esto empuja todo el contenido hacia arriba */
     align-items: center;
     min-height: 100vh;
 }
 
-/* ESTA ES LA REGLA QUE OCULTA LAS PANTALLAS */
 .hidden {
     display: none !important;
 }
@@ -24,20 +24,66 @@ body {
     max-width: 500px;
 }
 
+/* Transformamos las tarjetas para que sean transparentes */
 .card {
-    background: white;
-    padding: 30px;
-    border-radius: 12px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    background: transparent;
+    padding: 10px;
+    border-radius: 0;
+    box-shadow: none;
 }
 
 .resolution-card {
-    background: #f4ebd8;
-    padding: 30px;
-    border: 2px solid #0f172a;
-    border-radius: 8px;
+    background: transparent;
+    padding: 10px;
+    border: none;
     position: relative;
     overflow: hidden;
+}
+
+/* Tipografías y logos */
+.logo-large {
+    max-width: 200px;
+    margin: 0 auto;
+    display: block;
+}
+
+.logo-normal {
+    max-width: 120px;
+    margin: 0 auto;
+    display: block;
+}
+
+.title-small {
+    font-size: 1.3em;
+    margin: 10px 0 5px 0;
+}
+
+.subtitle-large {
+    font-size: 1.3em;
+    font-weight: bold;
+    margin-bottom: 25px;
+}
+
+/* Clase especial estilo máquina de escribir */
+.typewriter-text {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 1.1em;
+    font-weight: bold;
+    color: #1a1a1a;
+}
+
+.typewriter-input {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 1.1em;
+    font-weight: bold;
+    background: transparent;
+    border: 1px solid rgba(0,0,0,0.2);
+    border-bottom: 2px solid #1a1a1a;
+}
+
+.typewriter-input:focus {
+    outline: none;
+    background: rgba(255,255,255,0.2);
 }
 
 /* Botones y formularios */
@@ -53,25 +99,29 @@ button {
     transition: 0.2s;
 }
 
-.btn-primary {
-    background: #0f172a;
-    color: white;
-}
-
-.btn-secondary {
-    background: #e2e8f0;
-    color: #0f172a;
-}
-
-.btn-whatsapp {
-    background: #25d366;
-    color: white;
-}
+.btn-primary { background: #0f172a; color: white; }
+.btn-secondary { background: #e2e8f0; color: #0f172a; }
+.btn-whatsapp { background: #25d366; color: white; }
 
 input, select {
     width: 100%;
     padding: 12px;
     margin: 8px 0 20px 0;
-    border: 1px solid #ccc;
     border-radius: 8px;
+}
+
+select {
+    background: rgba(255,255,255,0.7);
+    border: 1px solid #1a1a1a;
+}
+
+.highlight { font-weight: bold; }
+
+/* Copyright Footer */
+.footer {
+    text-align: center;
+    font-weight: bold;
+    font-size: 0.85em;
+    margin-top: 40px;
+    color: #1a1a1a;
 }
