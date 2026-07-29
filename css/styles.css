@@ -5,14 +5,13 @@
 
 body {
     margin: 0;
-    padding: 30px 20px; /* Padding superior para que no pegue exactamente en el techo */
+    padding: 20px 20px 10px 20px;
     background-color: #f4ebd8; 
     color: #1a1a1a;
     display: flex;
     flex-direction: column;
-    justify-content: flex-start; /* Esto empuja todo el contenido hacia arriba */
     align-items: center;
-    min-height: 100vh;
+    min-height: 100vh; /* Permite estirar el contenido para que el footer baje */
 }
 
 .hidden {
@@ -22,9 +21,11 @@ body {
 .screen {
     width: 100%;
     max-width: 500px;
+    flex: 1; /* Hace que la pantalla principal ocupe todo el espacio sobrante */
+    display: flex;
+    flex-direction: column;
 }
 
-/* Transformamos las tarjetas para que sean transparentes */
 .card {
     background: transparent;
     padding: 10px;
@@ -32,24 +33,33 @@ body {
     box-shadow: none;
 }
 
+.text-center {
+    text-align: center;
+}
+
+/* Tarjeta especial que se adapta a las imágenes de fondo para descargar */
 .resolution-card {
-    background: transparent;
-    padding: 10px;
+    background-color: transparent;
+    padding: 30px 20px;
     border: none;
     position: relative;
-    overflow: hidden;
+    border-radius: 12px;
+    width: 100%;
+    aspect-ratio: 9/16; /* Proporción ideal para historias/redes */
+    display: flex;
+    flex-direction: column;
 }
 
 /* Tipografías y logos */
 .logo-large {
     max-width: 200px;
-    margin: 0 auto;
+    margin: 0 auto 10px auto;
     display: block;
 }
 
 .logo-normal {
     max-width: 120px;
-    margin: 0 auto;
+    margin: 0 auto 10px auto;
     display: block;
 }
 
@@ -64,7 +74,6 @@ body {
     margin-bottom: 25px;
 }
 
-/* Clase especial estilo máquina de escribir */
 .typewriter-text {
     font-family: 'Courier New', Courier, monospace;
     font-size: 1.1em;
@@ -86,7 +95,7 @@ body {
     background: rgba(255,255,255,0.2);
 }
 
-/* Botones y formularios */
+/* Botones */
 button {
     width: 100%;
     padding: 15px;
@@ -103,6 +112,20 @@ button {
 .btn-secondary { background: #e2e8f0; color: #0f172a; }
 .btn-whatsapp { background: #25d366; color: white; }
 
+/* Botón de Instagram */
+.btn-instagram {
+    display: block;
+    margin-top: 15px;
+    text-decoration: none;
+    text-align: center;
+    background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+    color: white;
+    padding: 15px;
+    border-radius: 8px;
+    font-weight: bold;
+    font-size: 1em;
+}
+
 input, select {
     width: 100%;
     padding: 12px;
@@ -117,11 +140,13 @@ select {
 
 .highlight { font-weight: bold; }
 
-/* Copyright Footer */
+/* Footer Global al final */
 .footer {
     text-align: center;
     font-weight: bold;
     font-size: 0.85em;
-    margin-top: 40px;
+    margin-top: auto; /* Empuja el footer siempre hasta abajo */
+    padding-top: 30px;
     color: #1a1a1a;
+    width: 100%;
 }
