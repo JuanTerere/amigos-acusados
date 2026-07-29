@@ -1,124 +1,144 @@
-<!-- PANTALLA 1: Inicio / Estadísticas -->
-<div id="screen-home" class="screen active">
-    <div class="card text-center">
-        <img src="assets/logo.png" alt="Amigos Acusados" class="logo">
-        <h1>Departamento de Conflictos</h1>
-        <p>Tribunal Oficial del Día de la Amistad</p>
-        <button id="btn-start" class="btn-primary">Presentar cargos</button>
-        <div class="stats">
-            <p>Visitantes: <span id="stat-visitantes">0</span></p>
-            <p>Cargos presentados: <span id="stat-cargos">0</span></p>
-            <p>Casos resueltos: <span id="stat-resoluciones">0</span></p>
-        </div>
-    </div>
-</div>
-
-<!-- PANTALLA 2: Formulario de Acusación -->
-<div id="screen-form" class="screen hidden">
-    <div class="card">
-        <h2>Nueva Acusación</h2>
-        <form id="charge-form">
-            <label>Tu nombre (Denunciante):</label>
-            <input type="text" id="denunciante" required>
-            
-            <label>Nombre del amigo (Acusado):</label>
-            <input type="text" id="acusado" required>
-            
-            <label>Seleccionar Cargo:</label>
-            <select id="acusacion" required></select>
-            
-            <button type="submit" id="btn-submit-charge" class="btn-primary">Presentar cargos</button>
-        </form>
-    </div>
-</div>
-
-<!-- PANTALLA 3: Compartir Caso -->
-<div id="screen-share" class="screen hidden">
-    <div class="card text-center">
-        <h2>Caso Creado</h2>
-        <p>Expediente N°: <span id="share-id" class="highlight"></span></p>
-        <p>Acusado: <strong id="share-acusado"></strong></p>
-        <p>Ahora tenés que notificar al acusado para que presente su defensa.</p>
-        <button id="btn-whatsapp" class="btn-whatsapp">Notificar por WhatsApp</button>
-    </div>
-</div>
-
-<!-- PANTALLA 4: Portada Acusado -->
-<div id="screen-accused" class="screen hidden">
-    <div class="card text-center">
-        <h2>¡ESTÁS ACUSADO!</h2>
-        <p>Expediente N°: <span id="accused-id" class="highlight"></span></p>
-        <p>Hola, <strong id="accused-name"></strong>.</p>
-        <p>Han presentado cargos formales en tu contra. Tenés derecho a revisar la evidencia antes de declarar.</p>
-        <button id="btn-view-dossier" class="btn-primary">Ver expediente</button>
-        <div class="action-buttons" style="margin-top: 20px;">
-            <button id="btn-plead-guilty" class="btn-primary">Soy Culpable</button>
-            <button id="btn-plead-innocent" class="btn-secondary">Actué bajo la presión de mi amigo</button>
-        </div>
-    </div>
-</div>
-
-<!-- PANTALLA 5: Expediente Detallado -->
-<div id="screen-dossier" class="screen hidden">
-    <div class="card">
-        <h2>Expediente Oficial</h2>
-        <p><strong>Acusado:</strong> <span id="dossier-acusado"></span></p>
-        <p><strong>Cargo:</strong> <span id="dossier-cargo-titulo"></span></p>
-        <img id="dossier-img" src="" alt="Evidencia" style="width: 100%; border-radius: 8px; margin: 10px 0;">
-        <p><strong>Resumen:</strong> <span id="dossier-resumen"></span></p>
-        <p><strong>Evidencia:</strong> <span id="dossier-evidencia-texto"></span></p>
-        <p><strong>Testimonios:</strong></p>
-        <ul style="text-align: left;">
-            <li id="dossier-t1"></li>
-            <li id="dossier-t2"></li>
-        </ul>
-        <button id="btn-back-accused" class="btn-secondary">Volver y Declarar</button>
-    </div>
-</div>
-
-<!-- PANTALLA 6: Culpar al amigo (NUEVA PANTALLA) -->
-<div id="screen-blame" class="screen hidden">
-    <div class="card">
-        <h2>Defensa Oficial</h2>
-        <p>Para desestimar la causa y salir libre, tenés que delatar a tu mala influencia.</p>
-        <p class="blame-statement" style="font-weight: bold; margin: 15px 0;">
-            "Declaro en mi defensa que actué por presión e influencia de mi amigo/a:"
-        </p>
-        <input type="text" id="blame-name" placeholder="Nombre de tu amigo..." required style="width: 100%; padding: 10px; margin-bottom: 20px;">
-        
-        <button id="btn-send-blame" class="btn-whatsapp">
-            Enviar descargo por WhatsApp
-        </button>
-    </div>
-</div>
-
-<!-- PANTALLA 7: Resolución Final -->
-<div id="screen-resolution" class="screen hidden">
-    <!-- ÁREA CAPTURADA PARA DESCARGAR -->
-    <div id="capture-area" class="resolution-card">
-        <div class="header-res">
-            <img src="assets/logo.png" alt="Logo" class="logo-res">
-            <img id="res-stamp" src="" alt="Sello" class="stamp">
-        </div>
-        <p><strong>Caso N°:</strong> <span id="res-id"></span></p>
-        <p><strong>Acusado:</strong> <span id="res-name"></span></p>
-        <p><strong>Cargo:</strong> <span id="res-cargo"></span></p>
-        <div class="resolution-text-box">
-            <p id="res-text"></p>
-        </div>
-        
-        <!-- Mensaje de Feliz Día -->
-        <h3 style="text-align: center; color: #1a1a1a; margin-top: 30px;">¡Feliz Día del Amigo!</h3>
-        
-        <div class="signature">
-            <img src="assets/firma.png" alt="Firma">
-            <p>Unidad de Investigación de Amistad<br>©By Matías Brizzio</p>
-        </div>
-    </div>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Amigos Acusados</title>
     
-    <!-- BOTONES FUERA DEL PNG -->
-    <div class="resolution-actions">
-        <button id="btn-download" class="btn-primary">Descargar resolución</button>
-        <button id="btn-new-accusation" class="btn-secondary" style="margin-top: 15px; width: 100%;">Hacer una acusación a un amigo</button>
+    <!-- Acá se conecta tu diseño. Asegurate de que tu archivo se llame así y esté en esa carpeta -->
+    <link rel="stylesheet" href="css/style.css"> 
+    
+    <!-- Librería necesaria para descargar la resolución como imagen -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+</head>
+<body>
+
+    <!-- PANTALLA 1: Inicio / Estadísticas -->
+    <div id="screen-home" class="screen active">
+        <div class="card text-center">
+            <img src="assets/logo.png" alt="Amigos Acusados" class="logo">
+            <h1>Departamento de Conflictos</h1>
+            <p>Tribunal Oficial del Día de la Amistad</p>
+            <button id="btn-start" class="btn-primary">Presentar cargos</button>
+            <div class="stats">
+                <p>Visitantes: <span id="stat-visitantes">0</span></p>
+                <p>Cargos presentados: <span id="stat-cargos">0</span></p>
+                <p>Casos resueltos: <span id="stat-resoluciones">0</span></p>
+            </div>
+        </div>
     </div>
-</div>
+
+    <!-- PANTALLA 2: Formulario de Acusación -->
+    <div id="screen-form" class="screen hidden">
+        <div class="card">
+            <h2>Nueva Acusación</h2>
+            <form id="charge-form">
+                <label>Tu nombre (Denunciante):</label>
+                <input type="text" id="denunciante" required>
+                
+                <label>Nombre del amigo (Acusado):</label>
+                <input type="text" id="acusado" required>
+                
+                <label>Seleccionar Cargo:</label>
+                <select id="acusacion" required></select>
+                
+                <button type="submit" id="btn-submit-charge" class="btn-primary">Presentar cargos</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- PANTALLA 3: Compartir Caso -->
+    <div id="screen-share" class="screen hidden">
+        <div class="card text-center">
+            <h2>Caso Creado</h2>
+            <p>Expediente N°: <span id="share-id" class="highlight"></span></p>
+            <p>Acusado: <strong id="share-acusado"></strong></p>
+            <p>Ahora tenés que notificar al acusado para que presente su defensa.</p>
+            <button id="btn-whatsapp" class="btn-whatsapp">Notificar por WhatsApp</button>
+        </div>
+    </div>
+
+    <!-- PANTALLA 4: Portada Acusado -->
+    <div id="screen-accused" class="screen hidden">
+        <div class="card text-center">
+            <h2>¡ESTÁS ACUSADO!</h2>
+            <p>Expediente N°: <span id="accused-id" class="highlight"></span></p>
+            <p>Hola, <strong id="accused-name"></strong>.</p>
+            <p>Han presentado cargos formales en tu contra. Tenés derecho a revisar la evidencia antes de declarar.</p>
+            <button id="btn-view-dossier" class="btn-primary">Ver expediente</button>
+            <div class="action-buttons" style="margin-top: 20px;">
+                <button id="btn-plead-guilty" class="btn-primary">Soy Culpable</button>
+                <button id="btn-plead-innocent" class="btn-secondary">Actué bajo la presión de mi amigo</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- PANTALLA 5: Expediente Detallado -->
+    <div id="screen-dossier" class="screen hidden">
+        <div class="card">
+            <h2>Expediente Oficial</h2>
+            <p><strong>Acusado:</strong> <span id="dossier-acusado"></span></p>
+            <p><strong>Cargo:</strong> <span id="dossier-cargo-titulo"></span></p>
+            <img id="dossier-img" src="" alt="Evidencia" style="width: 100%; border-radius: 8px; margin: 10px 0;">
+            <p><strong>Resumen:</strong> <span id="dossier-resumen"></span></p>
+            <p><strong>Evidencia:</strong> <span id="dossier-evidencia-texto"></span></p>
+            <p><strong>Testimonios:</strong></p>
+            <ul style="text-align: left;">
+                <li id="dossier-t1"></li>
+                <li id="dossier-t2"></li>
+            </ul>
+            <button id="btn-back-accused" class="btn-secondary">Volver y Declarar</button>
+        </div>
+    </div>
+
+    <!-- PANTALLA 6: Culpar al amigo (NUEVA PANTALLA) -->
+    <div id="screen-blame" class="screen hidden">
+        <div class="card">
+            <h2>Defensa Oficial</h2>
+            <p>Para desestimar la causa y salir libre, tenés que delatar a tu mala influencia.</p>
+            <p class="blame-statement" style="font-weight: bold; margin: 15px 0;">
+                "Declaro en mi defensa que actué por presión e influencia de mi amigo/a:"
+            </p>
+            <input type="text" id="blame-name" placeholder="Nombre de tu amigo..." required style="width: 100%; padding: 10px; margin-bottom: 20px;">
+            
+            <button id="btn-send-blame" class="btn-whatsapp">
+                Enviar descargo por WhatsApp
+            </button>
+        </div>
+    </div>
+
+    <!-- PANTALLA 7: Resolución Final -->
+    <div id="screen-resolution" class="screen hidden">
+        <!-- ÁREA CAPTURADA PARA DESCARGAR -->
+        <div id="capture-area" class="resolution-card">
+            <div class="header-res">
+                <img src="assets/logo.png" alt="Logo" class="logo-res">
+                <img id="res-stamp" src="" alt="Sello" class="stamp">
+            </div>
+            <p><strong>Caso N°:</strong> <span id="res-id"></span></p>
+            <p><strong>Acusado:</strong> <span id="res-name"></span></p>
+            <p><strong>Cargo:</strong> <span id="res-cargo"></span></p>
+            <div class="resolution-text-box">
+                <p id="res-text"></p>
+            </div>
+            
+            <!-- Mensaje de Feliz Día -->
+            <h3 style="text-align: center; color: #1a1a1a; margin-top: 30px;">¡Feliz Día del Amigo!</h3>
+            
+            <div class="signature">
+                <img src="assets/firma.png" alt="Firma">
+                <p>Unidad de Investigación de Amistad<br>©By Matías Brizzio</p>
+            </div>
+        </div>
+        
+        <!-- BOTONES FUERA DEL PNG -->
+        <div class="resolution-actions">
+            <button id="btn-download" class="btn-primary">Descargar resolución</button>
+            <button id="btn-new-accusation" class="btn-secondary" style="margin-top: 15px; width: 100%;">Hacer una acusación a un amigo</button>
+        </div>
+    </div>
+
+    <!-- Acá conectamos la lógica de JavaScript -->
+    <script type="module" src="js/app.js"></script>
+</body>
+</html>
