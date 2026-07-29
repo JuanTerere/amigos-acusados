@@ -18,19 +18,23 @@
             <h1 class="title-small">Departamento de Conflictos</h1>
             <p class="subtitle-large">Tribunal Oficial del Día de la Amistad</p>
             <button id="btn-start" class="btn-primary">Presentar cargos</button>
+            
+            <!-- Botón de Instagram Nuevo -->
+            <a href="https://www.instagram.com/juanterere" target="_blank" class="btn-instagram">¡Seguinos en Instagram!</a>
+
             <div class="stats typewriter-text" style="margin-top: 20px;">
                 <p>Visitantes: <span id="stat-visitantes">0</span></p>
                 <p>Cargos presentados: <span id="stat-cargos">0</span></p>
                 <p>Casos resueltos: <span id="stat-resoluciones">0</span></p>
             </div>
         </div>
-        <div class="footer">© Matías Brizzio, 2026</div>
     </div>
 
     <!-- PANTALLA 2: Formulario -->
     <div id="screen-form" class="screen hidden">
         <div class="card">
-            <h2>Nueva Acusación</h2>
+            <img src="assets/logo.png" alt="Amigos Acusados" class="logo-normal">
+            <h2 class="text-center">Nueva Acusación</h2>
             <form id="charge-form">
                 <label>Tu nombre (Denunciante):</label>
                 <input type="text" id="denunciante" class="typewriter-input" required>
@@ -44,19 +48,18 @@
                 <button type="submit" id="btn-submit-charge" class="btn-primary">Presentar cargos</button>
             </form>
         </div>
-        <div class="footer">© Matías Brizzio, 2026</div>
     </div>
 
     <!-- PANTALLA 3: Compartir Caso -->
     <div id="screen-share" class="screen hidden">
         <div class="card text-center">
+            <img src="assets/logo.png" alt="Amigos Acusados" class="logo-normal">
             <h2>Caso Creado</h2>
             <p>Expediente N°: <span id="share-id" class="typewriter-text highlight"></span></p>
             <p>Acusado: <strong id="share-acusado" class="typewriter-text"></strong></p>
             <p style="margin-top: 15px;">Ahora tenés que notificar al acusado para que presente su defensa.</p>
             <button id="btn-whatsapp" class="btn-whatsapp">Notificar por WhatsApp</button>
         </div>
-        <div class="footer">© Matías Brizzio, 2026</div>
     </div>
 
     <!-- PANTALLA 4: Portada Acusado -->
@@ -73,17 +76,16 @@
                 <button id="btn-plead-innocent" class="btn-secondary">Actué bajo la presión de mi amigo</button>
             </div>
         </div>
-        <div class="footer">© Matías Brizzio, 2026</div>
     </div>
 
     <!-- PANTALLA 5: Expediente Detallado -->
     <div id="screen-dossier" class="screen hidden">
         <div class="card">
-            <h2>Expediente Oficial</h2>
+            <img src="assets/logo.png" alt="Amigos Acusados" class="logo-normal">
+            <h2 class="text-center">Expediente Oficial</h2>
             <p><strong>Acusado:</strong> <span id="dossier-acusado" class="typewriter-text"></span></p>
             <p><strong>Cargo:</strong> <span id="dossier-cargo-titulo"></span></p>
             
-            <!-- ACÁ SE CARGA LA IMAGEN ESTÁTICA DE EVIDENCIA -->
             <img id="dossier-img" src="assets/evidencia.png" alt="Evidencia" style="width: 100%; border-radius: 4px; margin: 15px 0; border: 2px solid #1a1a1a; max-height: 150px; object-fit: cover;">
             
             <p><strong>Resumen:</strong> <span id="dossier-resumen"></span></p>
@@ -95,12 +97,12 @@
             </ul>
             <button id="btn-back-accused" class="btn-secondary">Volver y Declarar</button>
         </div>
-        <div class="footer">© Matías Brizzio, 2026</div>
     </div>
 
     <!-- PANTALLA 6: Culpar al amigo -->
     <div id="screen-blame" class="screen hidden">
         <div class="card text-center">
+            <img src="assets/logo.png" alt="Amigos Acusados" class="logo-normal">
             <h2>Defensa Oficial</h2>
             <p>Para desestimar la causa y salir libre, tenés que delatar a tu mala influencia.</p>
             <p style="font-weight: bold; margin: 15px 0;">
@@ -110,37 +112,39 @@
             
             <button id="btn-send-blame" class="btn-whatsapp">Enviar descargo por WhatsApp</button>
         </div>
-        <div class="footer">© Matías Brizzio, 2026</div>
     </div>
 
     <!-- PANTALLA 7: Resolución Final -->
     <div id="screen-resolution" class="screen hidden">
+        <!-- El fondo de la sentencia se inyecta directamente acá para poder descargarlo -->
         <div id="capture-area" class="resolution-card">
             <div style="position: relative; text-align: center; margin-bottom: 20px;">
                 <img src="assets/logo.png" alt="Logo" class="logo-normal">
-                <img id="res-stamp" src="" alt="Sello" style="position: absolute; right: 10px; top: 0; width: 100px; transform: rotate(-15deg);">
-            </div>
-            <p><strong>Caso N°:</strong> <span id="res-id" class="typewriter-text"></span></p>
-            <p><strong>Acusado:</strong> <span id="res-name" class="typewriter-text"></span></p>
-            <p><strong>Cargo:</strong> <span id="res-cargo" class="typewriter-text"></span></p>
-            
-            <div style="padding: 10px; margin: 20px 0;">
-                <p id="res-text" class="typewriter-text" style="font-weight: bold; font-size: 1.1em; margin: 0;"></p>
+                <img id="res-stamp" src="" alt="Sello" style="position: absolute; right: 0px; top: 0; width: 100px; transform: rotate(-15deg);">
             </div>
             
-            <h3 style="text-align: center; color: #1a1a1a; margin-top: 30px;">¡Feliz Día del Amigo!</h3>
-            
-            <div style="text-align: center; margin-top: 20px;">
-                <p style="font-size: 0.9em; font-weight: bold;">Unidad de Investigación de Amistad<br>© Matías Brizzio, 2026</p>
+            <div style="flex-grow: 1;">
+                <p><strong>Caso N°:</strong> <span id="res-id" class="typewriter-text"></span></p>
+                <p><strong>Acusado:</strong> <span id="res-name" class="typewriter-text"></span></p>
+                <p><strong>Cargo:</strong> <span id="res-cargo" class="typewriter-text"></span></p>
+                
+                <div style="padding: 10px; margin: 20px 0; text-align: center;">
+                    <p id="res-text" class="typewriter-text" style="font-weight: bold; font-size: 1.1em; margin: 0;"></p>
+                </div>
             </div>
+            <!-- Espacio transparente para que no se tape la firma de la imagen de fondo -->
+            <div style="height: 120px;"></div>
         </div>
         
+        <!-- Los botones ahora están por fuera de la tarjeta con fondo -->
         <div style="margin-top: 15px;">
             <button id="btn-download" class="btn-primary" style="margin-bottom: 10px;">Descargar resolución</button>
             <button id="btn-new-accusation" class="btn-secondary">Hacer una acusación a un amigo</button>
         </div>
-        <div class="footer">© Matías Brizzio, 2026</div>
     </div>
+
+    <!-- FOOTER GLOBAL: Siempre queda abajo -->
+    <div class="footer">© Matías Brizzio, 2026</div>
 
     <script type="module" src="js/app.js"></script>
 </body>
