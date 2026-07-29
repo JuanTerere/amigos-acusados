@@ -4,21 +4,30 @@ import { registrarVisita, getStats, createCase, getCase, resolveCase } from './f
 let currentCaseId = null;
 let currentCaseData = null;
 
+// CORRECCIÓN: Función reparada para cambiar de pantallas sin que queden en blanco
 const switchScreen = (id, bgClass = '') => {
-    document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden'));
+    // 1. Ocultar todas las pantallas asegurándonos de limpiar las clases
+    document.querySelectorAll('.screen').forEach(s => {
+        s.classList.remove('active');
+        s.classList.add('hidden');
+    });
+    
+    // 2. Mostrar únicamente la pantalla destino
     const screen = document.getElementById(id);
     screen.classList.remove('hidden');
+    screen.classList.add('active');
     
-    // Cambiar fondo si aplica
+    // Cambiar fondo de la pantalla de resolución si aplica
     if(bgClass) {
-        document.getElementById('screen-resolution').className = `screen ${bgClass}`;
+        document.getElementById('screen-resolution').className = `screen active ${bgClass}`;
     }
 };
 
 document.addEventListener('DOMContentLoaded', async () => {
-    registrarVisita();
+    // Registramos la visita en Firebase (se crea el documento si no existe)
+    await registrarVisita();
     
-    // Llenar selector
+    // Llenar selector de acusaciones
     const select = document.getElementById('acusacion');
     for (const [id, data] of Object.entries(acusaciones)) {
         const option = document.createElement('option');
@@ -27,7 +36,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         select.appendChild(option);
     }
 
-    // Router
+    // Router: Comprobar si alguien entra por link de WhatsApp
     const urlParams = new URLSearchParams(window.location.search);
     const casoId = urlParams.get('id');
 
@@ -44,7 +53,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             window.location.href = '/';
         }
     } else {
-        // Cargar stats
+        // Cargar y mostrar estadísticas globales
         const stats = await getStats();
         document.getElementById('stat-visitantes').textContent = stats.visitantes || 0;
         document.getElementById('stat-cargos').textContent = stats.cargos_presentados || 0;
@@ -52,9 +61,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 });
 
-// Presentar cargos
+// EVENTO: Botón de inicio para presentar cargos
 document.getElementById('btn-start').addEventListener('click', () => switchScreen('screen-form'));
 
+// EVENTO: Enviar formulario de cargos
 document.getElementById('charge-form').addEventListener('submit', async (e) => {
     e.preventDefault();
     const btn = document.getElementById('btn-submit-charge');
@@ -67,22 +77,28 @@ document.getElementById('charge-form').addEventListener('submit', async (e) => {
 
     const caseId = await createCase(denunciante, acusado, acusacionId);
     
-    document.getElementById('share-id').textContent = caseId.toUpperCase();
-    document.getElementById('share-denunciante').textContent = denunciante;
-    document.getElementById('share-acusado').textContent = acusado;
-    
-    // Preparar WhatsApp
-    const link = `https://juanterere.github.io/amigos-acusados/?id=${caseId}`;
-    const msg = `¡Ups!\n${acusado}...\nTu amigo ${denunciante} acaba de presentar cargos contra vos en *Amigos Acusados* 😅\n\n¿Sos culpable o vas a defender tu honor?\nEntrá y descubrí de qué te acusan.\n${link}`;
-    
-    document.getElementById('btn-whatsapp').onclick = () => {
-        window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(msg)}`, '_blank');
-    };
+    if (caseId) {
+        document.getElementById('share-id').textContent = caseId.toUpperCase();
+        document.getElementById('share-denunciante').textContent = denunciante;
+        document.getElementById('share-acusado').textContent = acusado;
+        
+        // Preparar WhatsApp
+        const link = `https://juanterere.github.io/amigos-acusados/?id=${caseId}`;
+        const msg = `¡Ups!\n${acusado}...\nTu amigo ${denunciante} acaba de presentar cargos contra vos en *Amigos Acusados* 😅\n\n¿Sos culpable o vas a defender tu honor?\nEntrá y descubrí de qué te acusan.\n${link}`;
+        
+        document.getElementById('btn-whatsapp').onclick = () => {
+            window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(msg)}`, '_blank');
+        };
 
-    switchScreen('screen-share');
+        switchScreen('screen-share');
+    } else {
+        alert("Hubo un problema al crear el caso. Intenta de nuevo.");
+        btn.disabled = false;
+        btn.textContent = 'Presentar cargos';
+    }
 });
 
-// Ver expediente
+// EVENTO: Acusado - Ver expediente
 document.getElementById('btn-view-dossier').addEventListener('click', () => {
     const ac = acusaciones[currentCaseData.acusacion];
     document.getElementById('dossier-acusado').textContent = currentCaseData.acusado;
@@ -90,14 +106,14 @@ document.getElementById('btn-view-dossier').addEventListener('click', () => {
     document.getElementById('dossier-resumen').textContent = ac.resumen;
     document.getElementById('dossier-img').src = ac.img;
     document.getElementById('dossier-evidencia-texto').textContent = ac.evidencia_texto;
-    document.getElementById('dossier-t1').textContent = ac.testimonio_1;
-    document.getElementById('dossier-t2').textContent = ac.testimonio_2;
+    document.getElementById('dossier-t1').textContent = `"${ac.testimonio_1}"`;
+    document.getElementById('dossier-t2').textContent = `"${ac.testimonio_2}"`;
     switchScreen('screen-dossier');
 });
 
 document.getElementById('btn-back-accused').addEventListener('click', () => switchScreen('screen-accused'));
 
-// Resoluciones
+// EVENTO: Acusado - Resoluciones
 const setResolution = async (tipo) => {
     const ac = acusaciones[currentCaseData.acusacion];
     document.getElementById('res-id').textContent = currentCaseId.toUpperCase();
@@ -120,17 +136,18 @@ const setResolution = async (tipo) => {
 document.getElementById('btn-plead-guilty').addEventListener('click', () => setResolution('culpable'));
 document.getElementById('btn-plead-innocent').addEventListener('click', () => setResolution('inocente'));
 
-// Descargar
+// EVENTO: Descargar PNG
 document.getElementById('btn-download').addEventListener('click', () => {
     const btn = document.getElementById('btn-download');
-    btn.textContent = 'Generando...';
+    btn.textContent = 'Generando imagen...';
     html2canvas(document.getElementById('capture-area'), {
         scale: 2,
         useCORS: true,
-        allowTaint: true
+        allowTaint: true,
+        backgroundColor: null
     }).then(canvas => {
         const link = document.createElement('a');
-        link.download = `Amigos-Acusados-${currentCaseId}.png`;
+        link.download = `Resolucion-${currentCaseId}.png`;
         link.href = canvas.toDataURL('image/png');
         link.click();
         btn.textContent = 'Descargar resolución';
