@@ -4,7 +4,6 @@ import { registrarVisita, getStats, createCase, getCase, resolveCase } from './f
 let currentCaseId = null;
 let currentCaseData = null;
 
-// NUEVO: Función mejorada que oculta pantallas y además cambia el fondo
 const switchScreen = (id, bgImage = null) => {
     document.querySelectorAll('.screen').forEach(s => {
         s.classList.remove('active');
@@ -15,7 +14,6 @@ const switchScreen = (id, bgImage = null) => {
     screen.classList.remove('hidden');
     screen.classList.add('active');
 
-    // Aplicar el fondo correspondiente
     if (bgImage) {
         document.body.style.backgroundImage = `url('assets/${bgImage}')`;
         document.body.style.backgroundSize = 'cover';
@@ -59,7 +57,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         document.getElementById('stat-cargos').textContent = stats.cargos_presentados || 0;
         document.getElementById('stat-resoluciones').textContent = (stats.sentencias_culpables || 0) + (stats.sentencias_inocentes || 0);
         
-        // Cargar fondo principal al inicio
         switchScreen('screen-home', 'fondo_inicio.png'); 
     }
 });
@@ -80,7 +77,6 @@ document.getElementById('charge-form').addEventListener('submit', async (e) => {
     
     if (caseId) {
         document.getElementById('share-id').textContent = caseId.toUpperCase();
-        // ACÁ ELIMINÉ LA LÍNEA QUE GENERABA EL ERROR Y COLGABA LA PÁGINA
         document.getElementById('share-acusado').textContent = acusado;
         
         const link = `https://juanterere.github.io/amigos-acusados/?id=${caseId}`;
@@ -103,12 +99,14 @@ document.getElementById('btn-view-dossier').addEventListener('click', () => {
     document.getElementById('dossier-acusado').textContent = currentCaseData.acusado;
     document.getElementById('dossier-cargo-titulo').textContent = ac.titulo.toUpperCase();
     document.getElementById('dossier-resumen').textContent = ac.resumen;
-    document.getElementById('dossier-img').src = ac.img;
+    
+    // Acá definimos que siempre cargue la misma imagen estática de evidencia
+    document.getElementById('dossier-img').src = 'assets/evidencia.png';
+    
     document.getElementById('dossier-evidencia-texto').textContent = ac.evidencia_texto;
     document.getElementById('dossier-t1').textContent = `"${ac.testimonio_1}"`;
     document.getElementById('dossier-t2').textContent = `"${ac.testimonio_2}"`;
     
-    // Cambiar al fondo del expediente
     switchScreen('screen-dossier', 'fondo_expediente.png');
 });
 
@@ -123,12 +121,10 @@ const setResolution = async (tipo) => {
     if (tipo === 'culpable') {
         document.getElementById('res-stamp').src = 'assets/sello_culpable.png';
         document.getElementById('res-text').textContent = randomItem(sentenciasCulpable);
-        // Cargar fondo culpable
         switchScreen('screen-resolution', 'fondo_sentencia_culpable.png');
     } else {
         document.getElementById('res-stamp').src = 'assets/sello_inocente.png';
         document.getElementById('res-text').textContent = randomItem(sentenciasInocente);
-        // Cargar fondo inocente
         switchScreen('screen-resolution', 'fondo_sentencia_inocente.png');
     }
     
