@@ -1,75 +1,77 @@
-:root {
-    --text-dark: #1E293B;
-    --text-light: #64748B;
-    --whatsapp: #25D366;
-    --guilty: #EF4444;
-    --innocent: #10B981;
+* {
+    box-sizing: border-box;
+    font-family: 'Arial', sans-serif;
 }
 
-* { margin: 0; padding: 0; box-sizing: border-box; font-family: sans-serif; }
-
 body {
-    background-color: #111; /* Color base detrás de la app */
+    margin: 0;
+    padding: 20px;
+    background-color: #f4ebd8; /* Tu fondo beige */
+    color: #1a1a1a;
     display: flex;
     justify-content: center;
+    align-items: center;
     min-height: 100vh;
 }
 
-.app-container {
-    width: 100%;
-    max-width: 450px; /* Tamaño móvil */
-    background: #FFF;
-    position: relative;
-    overflow-x: hidden;
-    display: flex;
-    flex-direction: column;
+/* ESTA ES LA REGLA QUE OCULTA LAS PANTALLAS */
+.hidden {
+    display: none !important;
 }
 
-/* Fondos */
-.bg-inicio { background: url('../assets/fondo_inicio.png') center/cover no-repeat; }
-.bg-cargos { background: url('../assets/fondo_presentar_cargos.png') center/cover no-repeat; }
-.bg-expediente { background: url('../assets/fondo_expediente.png') center/cover no-repeat; }
-.bg-culpable { background: url('../assets/fondo_sentencia_culpable.png') center/cover no-repeat; }
-.bg-inocente { background: url('../assets/fondo_sentencia_inocente.png') center/cover no-repeat; }
+.screen {
+    width: 100%;
+    max-width: 500px;
+}
 
-/* Pantallas */
-.screen { display: none; flex-direction: column; align-items: center; padding: 2rem; min-height: 100vh; }
-.screen.active { display: flex; }
-.hidden { display: none !important; }
+.card {
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
 
-/* Elementos comunes */
-.logo { width: 180px; margin-bottom: 1.5rem; }
-.logo-small { width: 100px; margin-bottom: 1.5rem; }
-h1, h2, h3 { color: var(--text-dark); text-align: center; margin-bottom: 1rem; }
+.resolution-card {
+    background: #f4ebd8;
+    padding: 30px;
+    border: 2px solid #0f172a;
+    border-radius: 8px;
+    position: relative;
+    overflow: hidden;
+}
 
-/* Botones */
-button { width: 100%; padding: 1rem; border: none; border-radius: 8px; font-size: 1rem; font-weight: bold; cursor: pointer; margin-bottom: 1rem; }
-.btn-primary { background: #0F172A; color: #FFF; }
-.btn-secondary { background: transparent; border: 2px solid #0F172A; color: #0F172A; }
-.btn-whatsapp { background: var(--whatsapp); color: #FFF; }
-.btn-guilty { background: var(--guilty); color: #FFF; }
-.btn-innocent { background: var(--innocent); color: #FFF; }
+/* Botones y formularios */
+button {
+    width: 100%;
+    padding: 15px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1em;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: 0.2s;
+}
 
-/* Formularios */
-form { width: 100%; }
-input, select { width: 100%; padding: 1rem; border: 1px solid #CBD5E1; border-radius: 8px; margin-bottom: 1rem; font-size: 1rem; }
+.btn-primary {
+    background: #0f172a;
+    color: white;
+}
 
-/* Estadísticas */
-.stats-container { display: flex; gap: 0.5rem; margin-top: auto; width: 100%; background: rgba(255,255,255,0.9); padding: 1rem; border-radius: 8px; }
-.stat { flex: 1; text-align: center; font-size: 0.8rem; font-weight: bold; }
-.stat span { display: block; font-size: 1.2rem; color: #0F172A; }
+.btn-secondary {
+    background: #e2e8f0;
+    color: #0f172a;
+}
 
-/* Expediente y Tarjetas */
-.info-card, .document-content { background: rgba(255,255,255,0.95); padding: 1.5rem; border-radius: 8px; width: 100%; margin-bottom: 1.5rem; }
-.document-content h3 { font-size: 0.9rem; color: var(--text-light); text-align: left; margin-top: 1.5rem; border-bottom: 1px solid #CCC; padding-bottom: 0.5rem; }
-.document-content p { font-size: 0.95rem; line-height: 1.5; margin-bottom: 0.5rem; }
-.evidence-img { width: 100%; border-radius: 4px; margin: 1rem 0; border: 1px solid #DDD; }
-blockquote { font-style: italic; border-left: 4px solid #0F172A; padding-left: 1rem; margin: 1rem 0; color: #333; }
-.status { color: #D4AF37; font-weight: bold; margin-top: 1rem; }
+.btn-whatsapp {
+    background: #25d366;
+    color: white;
+}
 
-/* Resolución */
-.resolution-wrapper { width: 100%; min-height: 400px; padding: 2rem; position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
-.stamp { width: 140px; position: absolute; top: 20px; right: 20px; transform: rotate(-15deg); }
-.verdict-text { font-size: 1.2rem; font-weight: bold; margin-top: 2rem; background: rgba(255,255,255,0.8); padding: 1rem; border-radius: 8px; }
-
-footer { text-align: center; font-size: 0.8rem; padding: 1rem; color: var(--text-light); position: absolute; bottom: 0; width: 100%; background: transparent; }
+input, select {
+    width: 100%;
+    padding: 12px;
+    margin: 8px 0 20px 0;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+}
