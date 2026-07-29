@@ -1,141 +1,138 @@
-import { catalog, getRandomItem } from './data.js';
-import { createCase, getCase, updateCaseResolution, getStats } from './firebase.js';
+import { acusaciones, sentenciasCulpable, sentenciasInocente, randomItem } from './data.js';
+import { registrarVisita, getStats, createCase, getCase, resolveCase } from './firebase.js';
 
-// Utilidad para cambiar pantallas
-const showScreen = (screenId) => {
-    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-    document.getElementById(screenId).classList.add('active');
+let currentCaseId = null;
+let currentCaseData = null;
+
+const switchScreen = (id, bgClass = '') => {
+    document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden'));
+    const screen = document.getElementById(id);
+    screen.classList.remove('hidden');
+    
+    // Cambiar fondo si aplica
+    if(bgClass) {
+        document.getElementById('screen-resolution').className = `screen ${bgClass}`;
+    }
 };
 
-let currentCaseData = null;
-let currentCaseId = null;
-
-// Inicialización
 document.addEventListener('DOMContentLoaded', async () => {
-    // Poblar el select de cargos
-    const selectCargo = document.getElementById('cargo');
-    for (const [id, data] of Object.entries(catalog)) {
+    registrarVisita();
+    
+    // Llenar selector
+    const select = document.getElementById('acusacion');
+    for (const [id, data] of Object.entries(acusaciones)) {
         const option = document.createElement('option');
         option.value = id;
-        option.textContent = data.label;
-        selectCargo.appendChild(option);
+        option.textContent = data.titulo;
+        select.appendChild(option);
     }
 
-    // Comprobar si es un enlace de acusado (ej: ?caso=ABCD123)
+    // Router
     const urlParams = new URLSearchParams(window.location.search);
-    const casoId = urlParams.get('caso');
+    const casoId = urlParams.get('id');
 
     if (casoId) {
         currentCaseId = casoId;
-        const caseData = await getCase(casoId);
-        if (caseData) {
-            currentCaseData = caseData;
-            document.getElementById('accused-name').textContent = caseData.acusado;
-            document.getElementById('accused-denunciante').textContent = caseData.denunciante;
-            showScreen('screen-accused');
+        currentCaseData = await getCase(casoId);
+        
+        if (currentCaseData) {
+            document.getElementById('accused-id').textContent = casoId.toUpperCase();
+            document.getElementById('accused-name').textContent = currentCaseData.acusado;
+            switchScreen('screen-accused');
         } else {
-            alert('Expediente no encontrado.');
-            showScreen('screen-home');
+            alert('Caso no encontrado');
+            window.location.href = '/';
         }
     } else {
-        // Cargar estadísticas en Home
+        // Cargar stats
         const stats = await getStats();
-        document.getElementById('stat-cases').textContent = stats.casosCreados || 0;
-        document.getElementById('stat-resolutions').textContent = stats.resoluciones || 0;
+        document.getElementById('stat-visitantes').textContent = stats.visitantes || 0;
+        document.getElementById('stat-cargos').textContent = stats.cargos_presentados || 0;
+        document.getElementById('stat-resoluciones').textContent = (stats.sentencias_culpables || 0) + (stats.sentencias_inocentes || 0);
     }
 });
 
-// EVENTOS: Home
-document.getElementById('btn-start').addEventListener('click', () => {
-    showScreen('screen-form');
-});
+// Presentar cargos
+document.getElementById('btn-start').addEventListener('click', () => switchScreen('screen-form'));
 
-// EVENTOS: Presentar Cargos
 document.getElementById('charge-form').addEventListener('submit', async (e) => {
     e.preventDefault();
     const btn = document.getElementById('btn-submit-charge');
     btn.disabled = true;
-    btn.textContent = 'Procesando expediente...';
+    btn.textContent = 'Procesando...';
 
     const denunciante = document.getElementById('denunciante').value;
     const acusado = document.getElementById('acusado').value;
-    const cargoId = document.getElementById('cargo').value;
+    const acusacionId = document.getElementById('acusacion').value;
 
-    const caseId = await createCase(denunciante, acusado, cargoId);
+    const caseId = await createCase(denunciante, acusado, acusacionId);
     
-    if (caseId) {
-        document.getElementById('share-case-id').textContent = caseId.toUpperCase();
-        document.getElementById('share-denunciante').textContent = denunciante;
-        document.getElementById('share-acusado').textContent = acusado;
-        
-        // Configurar mensaje de WhatsApp
-        const shareLink = `${window.location.origin}${window.location.pathname}?caso=${caseId}`;
-        const msg = `🚨 ¡Ups!\n${acusado}...\nTu amigo ${denunciante} acaba de presentar cargos contra vos en Amigos Acusados. 😅\n\n¿Sos culpable o vas a defender tu honor?\nEntrá y descubrí de qué te acusan.\n\n${shareLink}`;
-        
-        document.getElementById('btn-whatsapp').onclick = () => {
-            window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(msg)}`, '_blank');
-        };
+    document.getElementById('share-id').textContent = caseId.toUpperCase();
+    document.getElementById('share-denunciante').textContent = denunciante;
+    document.getElementById('share-acusado').textContent = acusado;
+    
+    // Preparar WhatsApp
+    const link = `https://juanterere.github.io/amigos-acusados/?id=${caseId}`;
+    const msg = `¡Ups!\n${acusado}...\nTu amigo ${denunciante} acaba de presentar cargos contra vos en *Amigos Acusados* 😅\n\n¿Sos culpable o vas a defender tu honor?\nEntrá y descubrí de qué te acusan.\n${link}`;
+    
+    document.getElementById('btn-whatsapp').onclick = () => {
+        window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(msg)}`, '_blank');
+    };
 
-        showScreen('screen-share');
-    }
+    switchScreen('screen-share');
 });
 
-// EVENTOS: Acusado - Ver Cargos
-document.getElementById('btn-view-charges').addEventListener('click', () => {
-    const cargoData = catalog[currentCaseData.cargoId];
-    document.getElementById('dossier-id').textContent = currentCaseId.toUpperCase();
-    document.getElementById('dossier-name').textContent = currentCaseData.acusado;
-    document.getElementById('dossier-date').textContent = currentCaseData.fecha;
-    document.getElementById('dossier-charge').textContent = cargoData.label;
-    
-    // Generar prueba aleatoria
-    document.getElementById('dossier-evidence').textContent = getRandomItem(cargoData.evidences);
-    
-    showScreen('screen-dossier');
+// Ver expediente
+document.getElementById('btn-view-dossier').addEventListener('click', () => {
+    const ac = acusaciones[currentCaseData.acusacion];
+    document.getElementById('dossier-acusado').textContent = currentCaseData.acusado;
+    document.getElementById('dossier-cargo-titulo').textContent = ac.titulo.toUpperCase();
+    document.getElementById('dossier-resumen').textContent = ac.resumen;
+    document.getElementById('dossier-img').src = ac.img;
+    document.getElementById('dossier-evidencia-texto').textContent = ac.evidencia_texto;
+    document.getElementById('dossier-t1').textContent = ac.testimonio_1;
+    document.getElementById('dossier-t2').textContent = ac.testimonio_2;
+    switchScreen('screen-dossier');
 });
 
-document.getElementById('btn-back-accused').addEventListener('click', () => {
-    showScreen('screen-accused');
-});
+document.getElementById('btn-back-accused').addEventListener('click', () => switchScreen('screen-accused'));
 
-// EVENTOS: Acusado - Sentencias
-const generateResolution = async (type) => {
-    const cargoData = catalog[currentCaseData.cargoId];
-    
+// Resoluciones
+const setResolution = async (tipo) => {
+    const ac = acusaciones[currentCaseData.acusacion];
     document.getElementById('res-id').textContent = currentCaseId.toUpperCase();
     document.getElementById('res-name').textContent = currentCaseData.acusado;
+    document.getElementById('res-cargo').textContent = ac.titulo;
     
-    if (type === 'culpable') {
-        document.getElementById('res-stamp').src = 'assets/sello-culpable.png';
-        document.getElementById('res-title').textContent = 'EL ACUSADO ACEPTA LOS CARGOS';
-        document.getElementById('res-text').textContent = `Sentencia dictada: ${getRandomItem(cargoData.sentences)}`;
+    if (tipo === 'culpable') {
+        document.getElementById('res-stamp').src = 'assets/sello_culpable.png';
+        document.getElementById('res-text').textContent = randomItem(sentenciasCulpable);
+        switchScreen('screen-resolution', 'bg-culpable');
     } else {
-        document.getElementById('res-stamp').src = 'assets/sello-inocente.png';
-        document.getElementById('res-title').textContent = 'EL ACUSADO HA SIDO ABSUELTO';
-        document.getElementById('res-text').textContent = `Fundamento: ${getRandomItem(cargoData.defenses)}`;
+        document.getElementById('res-stamp').src = 'assets/sello_inocente.png';
+        document.getElementById('res-text').textContent = randomItem(sentenciasInocente);
+        switchScreen('screen-resolution', 'bg-inocente');
     }
-
-    await updateCaseResolution(currentCaseId, type);
-    showScreen('screen-resolution');
+    
+    await resolveCase(currentCaseId, tipo);
 };
 
-document.getElementById('btn-plead-guilty').addEventListener('click', () => generateResolution('culpable'));
-document.getElementById('btn-plead-innocent').addEventListener('click', () => generateResolution('inocente'));
+document.getElementById('btn-plead-guilty').addEventListener('click', () => setResolution('culpable'));
+document.getElementById('btn-plead-innocent').addEventListener('click', () => setResolution('inocente'));
 
-// EVENTOS: Descargar Resolución
+// Descargar
 document.getElementById('btn-download').addEventListener('click', () => {
     const btn = document.getElementById('btn-download');
-    btn.textContent = 'Generando imagen...';
-    
-    // Usamos html2canvas sobre el div #resolution-capture
-    html2canvas(document.getElementById('resolution-capture'), {
-        scale: 2, // Mejor calidad
-        backgroundColor: '#FFFFFF'
+    btn.textContent = 'Generando...';
+    html2canvas(document.getElementById('capture-area'), {
+        scale: 2,
+        useCORS: true,
+        allowTaint: true
     }).then(canvas => {
         const link = document.createElement('a');
-        link.download = `Resolucion-${currentCaseId}.png`;
+        link.download = `Amigos-Acusados-${currentCaseId}.png`;
         link.href = canvas.toDataURL('image/png');
         link.click();
-        btn.textContent = 'Descargar y Compartir';
+        btn.textContent = 'Descargar resolución';
     });
 });

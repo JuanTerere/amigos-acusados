@@ -1,71 +1,56 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-app.js";
 import { getFirestore, collection, addDoc, getDoc, doc, updateDoc, increment } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-firestore.js";
 
-// Tu configuración de Firebase
 const firebaseConfig = {
-  apiKey: "AIzaSyDRIt695uY834ctoKJMfRfl1Mbr_XzsDlo",
-  authDomain: "amigos-acusados.firebaseapp.com",
-  databaseURL: "https://amigos-acusados-default-rtdb.firebaseio.com",
-  projectId: "amigos-acusados",
-  storageBucket: "amigos-acusados.firebasestorage.app",
-  messagingSenderId: "423077155035",
-  appId: "1:423077155035:web:a0968857ec686a3326fcfe"
+    // REEMPLAZAR CON TUS DATOS DE FIREBASE
+    apiKey: "TU_API_KEY",
+    authDomain: "tu-proyecto.firebaseapp.com",
+    projectId: "tu-proyecto"
 };
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-export const createCase = async (denunciante, acusado, cargoId) => {
-    try {
-        const docRef = await addDoc(collection(db, "casos"), {
-            denunciante,
-            acusado,
-            cargoId,
-            estado: "Pendiente",
-            fecha: new Date().toLocaleDateString(),
-            timestamp: Date.now()
-        });
-        
-        // Actualizar contador global
-        await updateDoc(doc(db, "estadisticas", "global"), {
-            casosCreados: increment(1)
-        });
-        
-        return docRef.id;
-    } catch (e) {
-        console.error("Error añadiendo el caso: ", e);
-        return null;
-    }
-};
-
-export const getCase = async (caseId) => {
-    const docRef = doc(db, "casos", caseId);
-    const docSnap = await getDoc(docRef);
-    if (docSnap.exists()) {
-        return docSnap.data();
-    }
-    return null;
-};
-
-export const updateCaseResolution = async (caseId, resolutionType) => {
-    const docRef = doc(db, "casos", caseId);
-    await updateDoc(docRef, {
-        estado: "Resuelto",
-        resolucion: resolutionType
-    });
-    
-    // Actualizar estadística correspondiente
-    const field = resolutionType === 'culpable' ? 'sentenciasCulpables' : 'sentenciasInocentes';
-    await updateDoc(doc(db, "estadisticas", "global"), {
-        [field]: increment(1),
-        resoluciones: increment(1)
-    });
+// Actualizar visitantes al entrar
+export const registrarVisita = async () => {
+    const statsRef = doc(db, "estadisticas", "global");
+    await updateDoc(statsRef, { visitantes: increment(1) }).catch(e => console.log("Stats init needed"));
 };
 
 export const getStats = async () => {
     const docSnap = await getDoc(doc(db, "estadisticas", "global"));
-    if (docSnap.exists()) {
-        return docSnap.data();
-    }
-    return { casosCreados: 0, resoluciones: 0 };
+    return docSnap.exists() ? docSnap.data() : { visitantes: 0, cargos_presentados: 0, sentencias_culpables: 0, sentencias_inocentes: 0 };
+};
+
+export const createCase = async (denunciante, acusado, acusacionId) => {
+    const docRef = await addDoc(collection(db, "casos"), {
+        denunciante,
+        acusado,
+        acusacion: acusacionId,
+        fecha: new Date().toLocaleDateString(),
+        estado: "Pendiente",
+        resolucion: null
+    });
+    
+    await updateDoc(doc(db, "estadisticas", "global"), {
+        cargos_presentados: increment(1)
+    });
+    return docRef.id;
+};
+
+export const getCase = async (id) => {
+    const docSnap = await getDoc(doc(db, "casos", id));
+    return docSnap.exists() ? docSnap.data() : null;
+};
+
+export const resolveCase = async (id, tipo) => {
+    await updateDoc(doc(db, "casos", id), {
+        estado: "Resuelto",
+        resolucion: tipo
+    });
+    
+    const campo = tipo === 'culpable' ? 'sentencias_culpables' : 'sentencias_inocentes';
+    await updateDoc(doc(db, "estadisticas", "global"), {
+        [campo]: increment(1)
+    });
 };
