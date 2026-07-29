@@ -4,7 +4,8 @@ import { registrarVisita, getStats, createCase, getCase, resolveCase } from './f
 let currentCaseId = null;
 let currentCaseData = null;
 
-const switchScreen = (id, bgClass = '') => {
+// NUEVO: Función mejorada que oculta pantallas y además cambia el fondo
+const switchScreen = (id, bgImage = null) => {
     document.querySelectorAll('.screen').forEach(s => {
         s.classList.remove('active');
         s.classList.add('hidden');
@@ -13,6 +14,17 @@ const switchScreen = (id, bgClass = '') => {
     const screen = document.getElementById(id);
     screen.classList.remove('hidden');
     screen.classList.add('active');
+
+    // Aplicar el fondo correspondiente
+    if (bgImage) {
+        document.body.style.backgroundImage = `url('assets/${bgImage}')`;
+        document.body.style.backgroundSize = 'cover';
+        document.body.style.backgroundPosition = 'center';
+        document.body.style.backgroundAttachment = 'fixed';
+    } else {
+        document.body.style.backgroundImage = 'none';
+        document.body.style.backgroundColor = '#f4ebd8';
+    }
 };
 
 document.addEventListener('DOMContentLoaded', async () => {
@@ -36,7 +48,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (currentCaseData) {
             document.getElementById('accused-id').textContent = casoId.toUpperCase();
             document.getElementById('accused-name').textContent = currentCaseData.acusado;
-            switchScreen('screen-accused');
+            switchScreen('screen-accused', 'fondo_presentar_cargos.png'); 
         } else {
             alert('Caso no encontrado');
             window.location.href = '/';
@@ -46,10 +58,13 @@ document.addEventListener('DOMContentLoaded', async () => {
         document.getElementById('stat-visitantes').textContent = stats.visitantes || 0;
         document.getElementById('stat-cargos').textContent = stats.cargos_presentados || 0;
         document.getElementById('stat-resoluciones').textContent = (stats.sentencias_culpables || 0) + (stats.sentencias_inocentes || 0);
+        
+        // Cargar fondo principal al inicio
+        switchScreen('screen-home', 'fondo_inicio.png'); 
     }
 });
 
-document.getElementById('btn-start').addEventListener('click', () => switchScreen('screen-form'));
+document.getElementById('btn-start').addEventListener('click', () => switchScreen('screen-form', 'fondo_presentar_cargos.png'));
 
 document.getElementById('charge-form').addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -65,7 +80,7 @@ document.getElementById('charge-form').addEventListener('submit', async (e) => {
     
     if (caseId) {
         document.getElementById('share-id').textContent = caseId.toUpperCase();
-        document.getElementById('share-denunciante').textContent = denunciante;
+        // ACÁ ELIMINÉ LA LÍNEA QUE GENERABA EL ERROR Y COLGABA LA PÁGINA
         document.getElementById('share-acusado').textContent = acusado;
         
         const link = `https://juanterere.github.io/amigos-acusados/?id=${caseId}`;
@@ -75,7 +90,7 @@ document.getElementById('charge-form').addEventListener('submit', async (e) => {
             window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(msg)}`, '_blank');
         };
 
-        switchScreen('screen-share');
+        switchScreen('screen-share', 'fondo_presentar_cargos.png');
     } else {
         alert("Hubo un problema. Intenta de nuevo.");
         btn.disabled = false;
@@ -92,9 +107,12 @@ document.getElementById('btn-view-dossier').addEventListener('click', () => {
     document.getElementById('dossier-evidencia-texto').textContent = ac.evidencia_texto;
     document.getElementById('dossier-t1').textContent = `"${ac.testimonio_1}"`;
     document.getElementById('dossier-t2').textContent = `"${ac.testimonio_2}"`;
-    switchScreen('screen-dossier');
+    
+    // Cambiar al fondo del expediente
+    switchScreen('screen-dossier', 'fondo_expediente.png');
 });
-document.getElementById('btn-back-accused').addEventListener('click', () => switchScreen('screen-accused'));
+
+document.getElementById('btn-back-accused').addEventListener('click', () => switchScreen('screen-accused', 'fondo_presentar_cargos.png'));
 
 const setResolution = async (tipo) => {
     const ac = acusaciones[currentCaseData.acusacion];
@@ -105,11 +123,13 @@ const setResolution = async (tipo) => {
     if (tipo === 'culpable') {
         document.getElementById('res-stamp').src = 'assets/sello_culpable.png';
         document.getElementById('res-text').textContent = randomItem(sentenciasCulpable);
-        switchScreen('screen-resolution');
+        // Cargar fondo culpable
+        switchScreen('screen-resolution', 'fondo_sentencia_culpable.png');
     } else {
         document.getElementById('res-stamp').src = 'assets/sello_inocente.png';
         document.getElementById('res-text').textContent = randomItem(sentenciasInocente);
-        switchScreen('screen-resolution');
+        // Cargar fondo inocente
+        switchScreen('screen-resolution', 'fondo_sentencia_inocente.png');
     }
     
     await resolveCase(currentCaseId, tipo);
@@ -118,7 +138,7 @@ const setResolution = async (tipo) => {
 document.getElementById('btn-plead-guilty').addEventListener('click', () => setResolution('culpable'));
 
 document.getElementById('btn-plead-innocent').addEventListener('click', () => {
-    switchScreen('screen-blame');
+    switchScreen('screen-blame', 'fondo_presentar_cargos.png');
 });
 
 document.getElementById('btn-send-blame').addEventListener('click', async () => {
