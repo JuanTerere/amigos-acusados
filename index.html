@@ -19,7 +19,6 @@
             <p class="subtitle-large">Tribunal Oficial del Día de la Amistad</p>
             <button id="btn-start" class="btn-primary">Presentar cargos</button>
             
-            <!-- Botón de Instagram Nuevo -->
             <a href="https://www.instagram.com/juanterere" target="_blank" class="btn-instagram">¡Seguinos en Instagram!</a>
 
             <div class="stats typewriter-text" style="margin-top: 20px;">
@@ -116,34 +115,39 @@
 
     <!-- PANTALLA 7: Resolución Final -->
     <div id="screen-resolution" class="screen hidden">
-        <!-- El fondo de la sentencia se inyecta directamente acá para poder descargarlo -->
+        <!-- Área de captura con la tarjeta y los nuevos textos requeridos -->
         <div id="capture-area" class="resolution-card">
-            <div style="position: relative; text-align: center; margin-bottom: 20px;">
+            <div style="position: relative; text-align: center; margin-bottom: 10px;">
                 <img src="assets/logo.png" alt="Logo" class="logo-normal">
-                <img id="res-stamp" src="" alt="Sello" style="position: absolute; right: 0px; top: 0; width: 100px; transform: rotate(-15deg);">
+                <img id="res-stamp" src="" alt="Sello" style="position: absolute; right: 0px; top: 0; width: 90px; transform: rotate(-15deg);">
             </div>
             
             <div style="flex-grow: 1;">
-                <p><strong>Caso N°:</strong> <span id="res-id" class="typewriter-text"></span></p>
-                <p><strong>Acusado:</strong> <span id="res-name" class="typewriter-text"></span></p>
-                <p><strong>Cargo:</strong> <span id="res-cargo" class="typewriter-text"></span></p>
+                <p style="margin: 5px 0;"><strong>Caso N°:</strong> <span id="res-id" class="typewriter-text"></span></p>
+                <p style="margin: 5px 0;"><strong>Acusado:</strong> <span id="res-name" class="typewriter-text"></span></p>
+                <p style="margin: 5px 0;"><strong>Cargo:</strong> <span id="res-cargo" class="typewriter-text"></span></p>
                 
-                <div style="padding: 10px; margin: 20px 0; text-align: center;">
-                    <p id="res-text" class="typewriter-text" style="font-weight: bold; font-size: 1.1em; margin: 0;"></p>
+                <div style="padding: 5px; margin: 10px 0; text-align: center;">
+                    <p id="res-text" class="typewriter-text" style="font-weight: bold; font-size: 1em; margin: 0;"></p>
                 </div>
             </div>
-            <!-- Espacio transparente para que no se tape la firma de la imagen de fondo -->
-            <div style="height: 120px;"></div>
+
+            <!-- Sección motivacional y llamadas a la acción dentro de la imagen -->
+            <div style="text-align: center; margin-top: auto; padding-bottom: 5px;">
+                <h3 style="color: #1a1a1a; margin: 0 0 5px 0; font-size: 1.2em;">¡Feliz Día del Amigo!</h3>
+                <p style="font-size: 0.8em; font-weight: bold; margin: 2px 0;">Etiqueta al acusador</p>
+                <p style="font-size: 0.8em; font-weight: bold; margin: 2px 0 10px 0;">Etiqueta a @juanterere</p>
+                <p style="font-size: 0.75em; font-weight: bold; margin: 0;">Unidad de Investigación de Amistad<br>© Matías Brizzio, 2026</p>
+            </div>
         </div>
         
-        <!-- Los botones ahora están por fuera de la tarjeta con fondo -->
         <div style="margin-top: 15px;">
             <button id="btn-download" class="btn-primary" style="margin-bottom: 10px;">Descargar resolución</button>
             <button id="btn-new-accusation" class="btn-secondary">Hacer una acusación a un amigo</button>
         </div>
     </div>
 
-    <!-- FOOTER GLOBAL: Siempre queda abajo -->
+    <!-- FOOTER GLOBAL -->
     <div class="footer">© Matías Brizzio, 2026</div>
 
     <script type="module" src="js/app.js"></script>
