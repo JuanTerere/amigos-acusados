@@ -3,95 +3,107 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Amigos Acusados - Unidad de Investigación de Amistad</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Amigos Acusados | Unidad de Investigación de Amistad</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </head>
 <body>
-
-    <!-- PANTALLA 1: CITACIÓN OFICIAL (Fondo: carpeta-de-caso) -->
-    <div id="screen-citation" class="screen active bg-carpeta">
-        <div class="police-folder-card">
+    <div class="app-container">
+        
+        <!-- PANTALLA INICIO -->
+        <section id="screen-home" class="screen bg-inicio active">
+            <img src="assets/logo.png" alt="Amigos Acusados" class="logo">
+            <h1>AMIGOS ACUSADOS</h1>
+            <button id="btn-start" class="btn-primary">Presentar cargos</button>
             
-            <!-- Logo ampliado -->
-            <img src="assets/img/logo-unidad.png" alt="Unidad de Investigación de Amistad" class="police-logo-large">
-
-            <h1 class="case-title">CITACIÓN OFICIAL</h1>
-            
-            <p class="case-subtitle">
-                Atención <strong id="accused-name">Matias</strong>, tu amigo <strong id="plaintiff-name">Juan</strong> ha presentado cargos formales en tu contra.
-            </p>
-
-            <div class="actions-stack">
-                <button id="btn-view-file" class="btn-police-secondary">
-                    📄 Ver Expediente de Investigación
-                </button>
-                <button id="btn-guilty" class="btn-police-danger">
-                    😅 Me declaro Culpable
-                </button>
-                <button id="btn-innocent" class="btn-police-success">
-                    😇 Me declaro Inocente
-                </button>
+            <div class="stats-container">
+                <div class="stat"><span id="stat-visitantes">0</span>👥 Ingresos</div>
+                <div class="stat"><span id="stat-cargos">0</span>🚨 Cargos</div>
+                <div class="stat"><span id="stat-resoluciones">0</span>⚖ Resoluciones</div>
             </div>
+        </section>
 
-            <!-- Botón estratégico de Instagram -->
-            <a href="https://www.instagram.com/juanterere" target="_blank" class="btn-instagram-link">
-                📸 Seguir las investigaciones en @juanterere
-            </a>
+        <!-- PANTALLA PRESENTAR CARGOS -->
+        <section id="screen-form" class="screen bg-cargos hidden">
+            <img src="assets/logo.png" alt="Logo" class="logo-small">
+            <form id="charge-form">
+                <input type="text" id="denunciante" required placeholder="Nombre del denunciante">
+                <input type="text" id="acusado" required placeholder="Nombre del acusado">
+                <select id="acusacion" required>
+                    <option value="" disabled selected>Seleccione la acusación...</option>
+                </select>
+                <button type="submit" id="btn-submit-charge" class="btn-primary">Presentar cargos</button>
+            </form>
+        </section>
 
-            <footer class="police-footer">©Matías Brizzio</footer>
-        </div>
-    </div>
-
-
-    <!-- PANTALLA 2: EXPEDIENTE DE INVESTIGACIÓN (Fondo: hoja-de-caso) -->
-    <div id="screen-file-detail" class="screen bg-hoja">
-        <div class="police-sheet-card">
-            
-            <!-- Logo policial -->
-            <img src="assets/img/logo-unidad.png" alt="Unidad de Investigación de Amistad" class="police-logo-large">
-
-            <h2 class="sheet-title">EXPEDIENTE DE INVESTIGACIÓN</h2>
-
-            <div class="case-meta-box">
-                <p><strong>Expediente N°:</strong> <span id="case-number">JIIR7TH6DCEYQXEXROLP</span></p>
-                <p><strong>Acusado:</strong> <span id="case-accused">Matias</span></p>
-                <p><strong>Fecha:</strong> <span id="case-date">28/7/2026</span></p>
+        <!-- PANTALLA CASO REGISTRADO -->
+        <section id="screen-share" class="screen bg-cargos hidden">
+            <img src="assets/logo.png" alt="Logo" class="logo-small">
+            <div class="info-card">
+                <h3>CASO REGISTRADO</h3>
+                <p><strong>Caso N°:</strong> <span id="share-id"></span></p>
+                <p><strong>Denunciante:</strong> <span id="share-denunciante"></span></p>
+                <p><strong>Acusado:</strong> <span id="share-acusado"></span></p>
+                <p class="status">ESTADO: Pendiente</p>
             </div>
+            <button id="btn-whatsapp" class="btn-whatsapp">Enviar por WhatsApp</button>
+        </section>
 
-            <hr class="police-divider">
-
-            <div class="case-section">
-                <span class="section-tag">CARGO IMPUTADO</span>
-                <h3 class="charge-text">Nunca responde los mensajes.</h3>
+        <!-- PANTALLA DEL ACUSADO -->
+        <section id="screen-accused" class="screen bg-inicio hidden">
+            <img src="assets/logo.png" alt="Logo" class="logo">
+            <div class="info-card">
+                <h2>CITACIÓN OFICIAL</h2>
+                <p><strong>Caso:</strong> <span id="accused-id"></span></p>
+                <p><strong>Acusado:</strong> <span id="accused-name"></span></p>
             </div>
+            <button id="btn-view-dossier" class="btn-secondary">Ver expediente</button>
+            <button id="btn-plead-guilty" class="btn-guilty">Me declaro culpable</button>
+            <button id="btn-plead-innocent" class="btn-innocent">Me declaro inocente</button>
+        </section>
 
-            <div class="case-section">
-                <span class="section-tag">PRUEBAS RECOPILADAS</span>
-                <div class="evidence-box">
-                    <em>Abrió el mensaje pero respondió mentalmente.</em>
-                </div>
-            </div>
-
-            <!-- ACCIONES: Eliminamos el callejón sin salida -->
-            <div class="actions-stack">
-                <button id="btn-back-declare" class="btn-police-secondary">
-                    ↩️ Volver a declarar
-                </button>
+        <!-- EXPEDIENTE OFICIAL -->
+        <section id="screen-dossier" class="screen bg-expediente hidden">
+            <div class="document-content">
+                <p><strong>ACUSADO:</strong> <span id="dossier-acusado"></span></p>
+                <p><strong>DELITO IMPUTADO:</strong> <span id="dossier-cargo-titulo"></span></p>
                 
-                <!-- BUCLE VIRAL: Invitar a acusar a otro amigo -->
-                <button id="btn-new-accusation" class="btn-police-primary">
-                    🚨 ¡Acusar a un amigo por un delito!
-                </button>
-
-                <!-- INSTAGRAM LINK -->
-                <a href="https://www.instagram.com/juanterere" target="_blank" class="btn-instagram-link">
-                    📸 Sumate a la comunidad en Instagram @juanterere
-                </a>
+                <h3>RESUMEN DEL CASO</h3>
+                <p id="dossier-resumen"></p>
+                
+                <h3>EVIDENCIA INCORPORADA AL EXPEDIENTE</h3>
+                <img id="dossier-img" src="" alt="Evidencia" class="evidence-img">
+                <p id="dossier-evidencia-texto" class="evidence-text"></p>
+                
+                <h3>TESTIMONIOS</h3>
+                <blockquote id="dossier-t1"></blockquote>
+                <blockquote id="dossier-t2"></blockquote>
+                
+                <h3>CONCLUSIÓN</h3>
+                <p>Luego de analizar las pruebas y los testimonios reunidos, esta Unidad considera que existen fundamentos suficientes para citar al acusado a presentar su declaración.</p>
+                <p class="status">Estado: Pendiente de resolución.</p>
+                
+                <button id="btn-back-accused" class="btn-secondary">Volver</button>
             </div>
+        </section>
 
-            <footer class="police-footer">©Matías Brizzio</footer>
-        </div>
+        <!-- RESOLUCIÓN -->
+        <section id="screen-resolution" class="screen hidden">
+            <div id="capture-area" class="resolution-wrapper">
+                <img src="assets/logo.png" alt="Logo" class="logo-small">
+                <p><strong>Caso N°:</strong> <span id="res-id"></span></p>
+                <p><strong>Acusado:</strong> <span id="res-name"></span></p>
+                <p><strong>Cargo:</strong> <span id="res-cargo"></span></p>
+                
+                <img id="res-stamp" src="" alt="Sello" class="stamp">
+                <p id="res-text" class="verdict-text"></p>
+            </div>
+            <button id="btn-download" class="btn-primary">Descargar resolución</button>
+        </section>
+
+        <footer>©By Matías Brizzio</footer>
     </div>
-
+    
+    <script type="module" src="js/app.js"></script>
 </body>
 </html>
