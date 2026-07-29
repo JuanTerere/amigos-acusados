@@ -11,7 +11,7 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    min-height: 100vh; /* Permite estirar el contenido para que el footer baje */
+    min-height: 100vh;
 }
 
 .hidden {
@@ -21,7 +21,7 @@ body {
 .screen {
     width: 100%;
     max-width: 500px;
-    flex: 1; /* Hace que la pantalla principal ocupe todo el espacio sobrante */
+    flex: 1;
     display: flex;
     flex-direction: column;
 }
@@ -37,15 +37,14 @@ body {
     text-align: center;
 }
 
-/* Tarjeta especial que se adapta a las imágenes de fondo para descargar */
 .resolution-card {
     background-color: transparent;
-    padding: 30px 20px;
+    padding: 20px 15px;
     border: none;
     position: relative;
     border-radius: 12px;
     width: 100%;
-    aspect-ratio: 9/16; /* Proporción ideal para historias/redes */
+    aspect-ratio: 9/16;
     display: flex;
     flex-direction: column;
 }
@@ -58,8 +57,8 @@ body {
 }
 
 .logo-normal {
-    max-width: 120px;
-    margin: 0 auto 10px auto;
+    max-width: 110px;
+    margin: 0 auto 5px auto;
     display: block;
 }
 
@@ -76,7 +75,7 @@ body {
 
 .typewriter-text {
     font-family: 'Courier New', Courier, monospace;
-    font-size: 1.1em;
+    font-size: 1em;
     font-weight: bold;
     color: #1a1a1a;
 }
@@ -112,7 +111,6 @@ button {
 .btn-secondary { background: #e2e8f0; color: #0f172a; }
 .btn-whatsapp { background: #25d366; color: white; }
 
-/* Botón de Instagram */
 .btn-instagram {
     display: block;
     margin-top: 15px;
@@ -140,12 +138,11 @@ select {
 
 .highlight { font-weight: bold; }
 
-/* Footer Global al final */
 .footer {
     text-align: center;
     font-weight: bold;
     font-size: 0.85em;
-    margin-top: auto; /* Empuja el footer siempre hasta abajo */
+    margin-top: auto;
     padding-top: 30px;
     color: #1a1a1a;
     width: 100%;
