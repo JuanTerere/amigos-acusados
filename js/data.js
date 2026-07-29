@@ -122,19 +122,19 @@ export const acusaciones = {
 };
 
 export const sentenciasCulpable = [
-    "Deberá cebar el próximo tereré para todos.",
-    "Condenado a llevar chipas calentitas para la próxima reunión.",
+    "Deberá cebar tereré para todos.",
+    "Condenado a llevar chipas para la próxima reunión.",
     "Deberá comprar el hielo obligatoriamente.",
     "Sentenciado a organizar el próximo encuentro.",
-    "Tendrá que invitar el siguiente tereré completo."
+    "Tendrá que invitar el siguiente tereré rupá."
 ];
 
 export const sentenciasInocente = [
     "No respondió porque estaba ignorando a todos por igual. Es justo.",
     "No llegó tarde. Los demás llegaron demasiado temprano.",
-    "No desapareció. Estaba buscando estacionamiento espiritual.",
+    "No desapareció. Estaba buscando estacionamiento para el alma.",
     "Su teléfono sufre de amnesia temporal, queda absuelto.",
-    "El acusado actuó bajo la influencia de la paja extrema. Inocente."
+    "El acusado actuó bajo la influencia de alguien más. Inocente."
 ];
 
 export const randomItem = (arr) => arr[Math.floor(Math.random() * arr.length)];
