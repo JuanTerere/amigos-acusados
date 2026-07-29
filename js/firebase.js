@@ -1,11 +1,15 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-app.js";
 import { getFirestore, collection, addDoc, getDoc, doc, updateDoc, increment } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-firestore.js";
 
+// Tu configuración real de Firebase
 const firebaseConfig = {
-    // REEMPLAZAR CON TUS DATOS DE FIREBASE
-    apiKey: "TU_API_KEY",
-    authDomain: "tu-proyecto.firebaseapp.com",
-    projectId: "tu-proyecto"
+  apiKey: "AIzaSyDRIt695uY834ctoKJMfRfl1Mbr_XzsDlo",
+  authDomain: "amigos-acusados.firebaseapp.com",
+  databaseURL: "https://amigos-acusados-default-rtdb.firebaseio.com",
+  projectId: "amigos-acusados",
+  storageBucket: "amigos-acusados.firebasestorage.app",
+  messagingSenderId: "423077155035",
+  appId: "1:423077155035:web:a0968857ec686a3326fcfe"
 };
 
 const app = initializeApp(firebaseConfig);
@@ -14,7 +18,7 @@ const db = getFirestore(app);
 // Actualizar visitantes al entrar
 export const registrarVisita = async () => {
     const statsRef = doc(db, "estadisticas", "global");
-    await updateDoc(statsRef, { visitantes: increment(1) }).catch(e => console.log("Stats init needed"));
+    await updateDoc(statsRef, { visitantes: increment(1) }).catch(e => console.log("Se requiere iniciar el documento stats"));
 };
 
 export const getStats = async () => {
