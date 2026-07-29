@@ -4,7 +4,6 @@ import { registrarVisita, getStats, createCase, getCase, resolveCase } from './f
 let currentCaseId = null;
 let currentCaseData = null;
 
-// Cambiador de pantallas seguro (evita pantallas en blanco)
 const switchScreen = (id, bgClass = '') => {
     document.querySelectorAll('.screen').forEach(s => {
         s.classList.remove('active');
@@ -14,17 +13,11 @@ const switchScreen = (id, bgClass = '') => {
     const screen = document.getElementById(id);
     screen.classList.remove('hidden');
     screen.classList.add('active');
-    
-    if(bgClass) {
-        document.getElementById('screen-resolution').className = `screen active ${bgClass}`;
-    }
 };
 
 document.addEventListener('DOMContentLoaded', async () => {
-    // 1. Registrar visita (crea documento si no existe)
     await registrarVisita();
     
-    // 2. Llenar selector
     const select = document.getElementById('acusacion');
     for (const [id, data] of Object.entries(acusaciones)) {
         const option = document.createElement('option');
@@ -33,7 +26,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         select.appendChild(option);
     }
 
-    // 3. Revisar URL por si es un acusado entrando
     const urlParams = new URLSearchParams(window.location.search);
     const casoId = urlParams.get('id');
 
@@ -50,7 +42,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             window.location.href = '/';
         }
     } else {
-        // Cargar estadísticas en inicio
         const stats = await getStats();
         document.getElementById('stat-visitantes').textContent = stats.visitantes || 0;
         document.getElementById('stat-cargos').textContent = stats.cargos_presentados || 0;
@@ -58,10 +49,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 });
 
-// EVENTO: Ir al formulario
 document.getElementById('btn-start').addEventListener('click', () => switchScreen('screen-form'));
 
-// EVENTO: Enviar formulario de cargos
 document.getElementById('charge-form').addEventListener('submit', async (e) => {
     e.preventDefault();
     const btn = document.getElementById('btn-submit-charge');
@@ -88,13 +77,12 @@ document.getElementById('charge-form').addEventListener('submit', async (e) => {
 
         switchScreen('screen-share');
     } else {
-        alert("Hubo un problema al crear el caso. Intenta de nuevo.");
+        alert("Hubo un problema. Intenta de nuevo.");
         btn.disabled = false;
         btn.textContent = 'Presentar cargos';
     }
 });
 
-// EVENTOS: Leer expediente
 document.getElementById('btn-view-dossier').addEventListener('click', () => {
     const ac = acusaciones[currentCaseData.acusacion];
     document.getElementById('dossier-acusado').textContent = currentCaseData.acusado;
@@ -108,7 +96,6 @@ document.getElementById('btn-view-dossier').addEventListener('click', () => {
 });
 document.getElementById('btn-back-accused').addEventListener('click', () => switchScreen('screen-accused'));
 
-// FUNCION: Emitir Sentencia
 const setResolution = async (tipo) => {
     const ac = acusaciones[currentCaseData.acusacion];
     document.getElementById('res-id').textContent = currentCaseId.toUpperCase();
@@ -118,52 +105,41 @@ const setResolution = async (tipo) => {
     if (tipo === 'culpable') {
         document.getElementById('res-stamp').src = 'assets/sello_culpable.png';
         document.getElementById('res-text').textContent = randomItem(sentenciasCulpable);
-        switchScreen('screen-resolution', 'bg-culpable');
+        switchScreen('screen-resolution');
     } else {
         document.getElementById('res-stamp').src = 'assets/sello_inocente.png';
         document.getElementById('res-text').textContent = randomItem(sentenciasInocente);
-        switchScreen('screen-resolution', 'bg-inocente');
+        switchScreen('screen-resolution');
     }
     
     await resolveCase(currentCaseId, tipo);
 };
 
-// EVENTO: Acusado Culpable (Directo)
 document.getElementById('btn-plead-guilty').addEventListener('click', () => setResolution('culpable'));
 
-// EVENTO: Acusado Inocente (Abre pantalla de delatar)
 document.getElementById('btn-plead-innocent').addEventListener('click', () => {
     switchScreen('screen-blame');
 });
 
-// EVENTO: Enviar culpa al amigo por WA y emitir sentencia
 document.getElementById('btn-send-blame').addEventListener('click', async () => {
     const blameName = document.getElementById('blame-name').value.trim();
-    
     if (!blameName) {
-        alert("¡Tenés que escribir el nombre de tu amigo para salvarte!");
+        alert("¡Escribí el nombre para salvarte!");
         return;
     }
-
     const ac = acusaciones[currentCaseData.acusacion];
     const msg = `¡Ey ${blameName}!\nMe acaban de acusar de "${ac.titulo}", pero me declaré inocente ante el juez alegando que actué bajo TU MALA INFLUENCIA. 😅\n\nQuedás formalmente involucrado en el caso.\nEntrá a defenderte o crear tu propia acusación: https://juanterere.github.io/amigos-acusados/`;
-    
-    // Abre WhatsApp con el texto
     window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(msg)}`, '_blank');
-    
-    // Recién ahora se resuelve como inocente en el sistema
     await setResolution('inocente');
 });
 
-// EVENTO: Volver al inicio para nueva acusación
 document.getElementById('btn-new-accusation').addEventListener('click', () => {
-    window.location.href = window.location.pathname; // Limpia la URL y recarga
+    window.location.href = window.location.pathname; 
 });
 
-// EVENTO: Descargar PNG
 document.getElementById('btn-download').addEventListener('click', () => {
     const btn = document.getElementById('btn-download');
-    btn.textContent = 'Generando imagen...';
+    btn.textContent = 'Generando...';
     html2canvas(document.getElementById('capture-area'), {
         scale: 2,
         useCORS: true,
