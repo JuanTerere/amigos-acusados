@@ -46,7 +46,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (currentCaseData) {
             document.getElementById('accused-id').textContent = casoId.toUpperCase();
             document.getElementById('accused-name').textContent = currentCaseData.acusado;
-            switchScreen('screen-accused', 'fondo_presentar_cargos.png'); 
+            switchScreen('screen-accused', 'acusado.png'); 
         } else {
             alert('Caso no encontrado');
             window.location.href = '/';
@@ -99,10 +99,7 @@ document.getElementById('btn-view-dossier').addEventListener('click', () => {
     document.getElementById('dossier-acusado').textContent = currentCaseData.acusado;
     document.getElementById('dossier-cargo-titulo').textContent = ac.titulo.toUpperCase();
     document.getElementById('dossier-resumen').textContent = ac.resumen;
-    
-    // Acá definimos que siempre cargue la misma imagen estática de evidencia
     document.getElementById('dossier-img').src = 'assets/evidencia.png';
-    
     document.getElementById('dossier-evidencia-texto').textContent = ac.evidencia_texto;
     document.getElementById('dossier-t1').textContent = `"${ac.testimonio_1}"`;
     document.getElementById('dossier-t2').textContent = `"${ac.testimonio_2}"`;
@@ -110,7 +107,7 @@ document.getElementById('btn-view-dossier').addEventListener('click', () => {
     switchScreen('screen-dossier', 'fondo_expediente.png');
 });
 
-document.getElementById('btn-back-accused').addEventListener('click', () => switchScreen('screen-accused', 'fondo_presentar_cargos.png'));
+document.getElementById('btn-back-accused').addEventListener('click', () => switchScreen('screen-accused', 'acusado.png'));
 
 const setResolution = async (tipo) => {
     const ac = acusaciones[currentCaseData.acusacion];
@@ -118,15 +115,24 @@ const setResolution = async (tipo) => {
     document.getElementById('res-name').textContent = currentCaseData.acusado;
     document.getElementById('res-cargo').textContent = ac.titulo;
     
+    const captureArea = document.getElementById('capture-area');
+
     if (tipo === 'culpable') {
         document.getElementById('res-stamp').src = 'assets/sello_culpable.png';
         document.getElementById('res-text').textContent = randomItem(sentenciasCulpable);
-        switchScreen('screen-resolution', 'fondo_sentencia_culpable.png');
+        captureArea.style.backgroundImage = "url('assets/fondo_sentencia_culpable.png')";
     } else {
         document.getElementById('res-stamp').src = 'assets/sello_inocente.png';
         document.getElementById('res-text').textContent = randomItem(sentenciasInocente);
-        switchScreen('screen-resolution', 'fondo_sentencia_inocente.png');
+        captureArea.style.backgroundImage = "url('assets/fondo_sentencia_inocente.png')";
     }
+    
+    // Configuramos el fondo directamente en el recuadro para que lo tome al descargar
+    captureArea.style.backgroundSize = 'cover';
+    captureArea.style.backgroundPosition = 'center';
+
+    // Para la pantalla final limpiamos el fondo general (así no interfiere visualmente)
+    switchScreen('screen-resolution', null);
     
     await resolveCase(currentCaseId, tipo);
 };
