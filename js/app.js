@@ -61,7 +61,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 });
 
-document.getElementById('btn-start').addEventListener('click', () => switchScreen('screen-form', 'fondo_presentar_cargos.png'));
+document.getElementById('btn-start').addEventListener('click', () => switchScreen('screen-form', 'fondo_cargos.png'));
 
 document.getElementById('charge-form').addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -86,7 +86,7 @@ document.getElementById('charge-form').addEventListener('submit', async (e) => {
             window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(msg)}`, '_blank');
         };
 
-        switchScreen('screen-share', 'fondo_presentar_cargos.png');
+        switchScreen('screen-share', 'fondo_cargos.png');
     } else {
         alert("Hubo un problema. Intenta de nuevo.");
         btn.disabled = false;
@@ -127,11 +127,9 @@ const setResolution = async (tipo) => {
         captureArea.style.backgroundImage = "url('assets/fondo_sentencia_inocente.png')";
     }
     
-    // Configuramos el fondo directamente en el recuadro para que lo tome al descargar
     captureArea.style.backgroundSize = 'cover';
     captureArea.style.backgroundPosition = 'center';
 
-    // Para la pantalla final limpiamos el fondo general (así no interfiere visualmente)
     switchScreen('screen-resolution', null);
     
     await resolveCase(currentCaseId, tipo);
@@ -140,7 +138,7 @@ const setResolution = async (tipo) => {
 document.getElementById('btn-plead-guilty').addEventListener('click', () => setResolution('culpable'));
 
 document.getElementById('btn-plead-innocent').addEventListener('click', () => {
-    switchScreen('screen-blame', 'fondo_presentar_cargos.png');
+    switchScreen('screen-blame', 'fondo_cargos.png');
 });
 
 document.getElementById('btn-send-blame').addEventListener('click', async () => {
